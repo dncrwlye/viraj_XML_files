@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 
 # Change to the project directory
-os.chdir('/Users/dancrowley/viraj_project')
+project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+os.chdir(project_dir)
 
 # Print current working directory to verify
 print(os.getcwd())
@@ -14,9 +15,11 @@ print(os.getcwd())
 from import_xml import parse_xml_file
 from import_xml import extract_modelled_subgroups
 
-# Example usage
+
+# Importing Viraj new file 
 if __name__ == "__main__":
-    xml_file_path = "/Users/dancrowley/viraj_project/data/D_1000290791_val-data_P1.xml"  # Replace with your XML file path
+    xml_file_path = os.path.join(project_dir, "data", "WarpXML_Example.xml")
+    #xml_file_path = "/Users/dancrowley/viraj_project/data/WarpXML_Example.xml"  # Replace with your XML file path
     root_element = parse_xml_file(xml_file_path)
     
     # Add your processing logic here
@@ -29,19 +32,3 @@ if __name__ == "__main__":
 
 # Usage (assuming xml_root is your already imported XML)
 subgroups_df = extract_modelled_subgroups(root_element)
-
-# Display the first few rows
-if subgroups_df is not None:
-    print("\nFirst 5 rows:")
-    print(subgroups_df.head())
-
-
-from import_xml  import create_ramachandran_plot
-from import_xml  import generate_test_data
-
-test_phi, test_psi = generate_test_data()
-
-# Create and show the plot
-fig, ax = create_ramachandran_plot(test_phi, test_psi)
-plt.tight_layout()
-plt.show()
