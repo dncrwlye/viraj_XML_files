@@ -6,27 +6,29 @@ import numpy as np
 import pandas as pd
 import io
 import xml.etree.ElementTree as ET
+import sys #(when running interactively)
+from pathlib import Path
 
-#import sys #(when running interactively)
-#sys.path.append('src')  # Add src folder to Python's search path
+# Get the absolute path to the project root directory
+# This works regardless of where the script is located within the project
+project_root = Path(__file__).resolve().parent.parent
+# get the project directory
+# Add project root to Python's path if it's not already there
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
-
-# Change to the project directory
-os.chdir('/Users/dancrowley/viraj_project')
-#project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-#os.chdir(project_dir)
-
-project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-# Print current working directory to verify
-print(os.getcwd())
-
+# Now this should work for anyone, anywhere
 from src.import_xml import parse_xml_file
 from src.import_xml import extract_modelled_subgroups
 
+project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+print(project_dir)
+# Print current working directory to verify
+
 # Importing Viraj new file 
 if __name__ == "__main__":
-    #xml_file_path = os.path.join(project_dir, "data", "WarpXML_Example.xml")
-    xml_file_path = "/Users/dancrowley/viraj_project/data/WarpXML_Example.xml"
+    xml_file_path = os.path.join(project_dir, "data", "WarpXML_Example.xml")
+    #xml_file_path = "/Users/dancrowley/viraj_project/data/WarpXML_Example.xml"
     root_element = parse_xml_file(xml_file_path)
     
     # Add your processing logic here

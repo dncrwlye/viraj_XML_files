@@ -1,9 +1,9 @@
 #viraj code
-
 import pandas as pd
 import xml.etree.ElementTree as ET
 import numpy as np
 import matplotlib.pyplot as plt
+import os as os
 
 def parse_xml_file(file_path):
     """
@@ -146,3 +146,53 @@ def generate_test_data(n=1000):
     psi = np.concatenate([alpha_psi, beta_psi, rest_psi])
     
     return phi, psi
+
+def pull_dose(xml_file_name, xml_file_path):
+    # Importing a single file and extract angle and dose  
+    full_path = os.path.join(xml_file_path, xml_file_name)
+    
+    root_element = parse_xml_file(full_path)
+    
+    # Add your processing logic here
+    if root_element is not None:
+        dose_elem = root_element.find("Dose")
+        
+        if dose_elem is not None and dose_elem.text:
+            # Split the text by newlines and convert to numeric values
+            values = [float(val) for val in dose_elem.text.strip().split('\n') if val.strip()]
+            
+            # Create a DataFrame with these values
+            df = pd.DataFrame({'Dose': values})
+            
+            # Add a Filename column with the filename repeated for each row
+            df['Filename'] = xml_file_name
+            
+            return df
+    
+    # Return None or empty DataFrame if unable to process
+    return None
+
+def pull_angle(xml_file_name, xml_file_path):
+    # Importing a single file and extract angle and dose  
+    full_path = os.path.join(xml_file_path, xml_file_name)
+    
+    root_element = parse_xml_file(full_path)
+    
+    # Add your processing logic here
+    if root_element is not None:
+        dose_elem = root_element.find("Angles")
+        
+        if dose_elem is not None and dose_elem.text:
+            # Split the text by newlines and convert to numeric values
+            values = [float(val) for val in dose_elem.text.strip().split('\n') if val.strip()]
+            
+            # Create a DataFrame with these values
+            df = pd.DataFrame({'Angles': values})
+            
+            # Add a Filename column with the filename repeated for each row
+            df['Filename'] = xml_file_name
+            
+            return df
+    
+    # Return None or empty DataFrame if unable to process
+    return None
