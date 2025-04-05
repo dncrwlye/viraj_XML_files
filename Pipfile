@@ -19,6 +19,7 @@ matplotlib = "*"
 numpy = "*"
 pandas = "*"
 lxml = "*"
+seaborn = "*"
 
 [dev-packages]
 

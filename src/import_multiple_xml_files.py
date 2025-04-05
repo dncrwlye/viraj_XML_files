@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+print(f"Numpy path: {np.__file__}")
 import pandas as pd
 import io
+import seaborn as sns
 import xml.etree.ElementTree as ET
 import sys #(when running interactively)
 from pathlib import Path
@@ -27,11 +32,11 @@ project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 new_xml_folder_path = os.path.join(project_dir, "data", "All_XML_FILES")
 
-print(new_xml_folder_path)
+#print(new_xml_folder_path)
 
 file_list = os.listdir(new_xml_folder_path)
 
-print("Files in folder:")
+#print("Files in folder:")
 #for file in file_list:
     #print(file)
 
@@ -41,19 +46,19 @@ dat_angle = pull_angle(xml_file_name = file_list[1], xml_file_path =new_xml_fold
 
 if dat_dose is not None:  # Always good to check that the function returned data
     print("First 5 entries of the DataFrame:")
-    print(dat_dose.head())
+    #print(dat_dose.head())
 else:
     print("No data was returned from pull_dose")
 
 if dat_angle is not None:  # Always good to check that the function returned data
     print("First 5 entries of the DataFrame:")
-    print(dat_angle.head())
+    #print(dat_angle.head())
 else:
     print("No data was returned from pull_angle")
 
-
 #now let'd do this for all the datasets 
 # Initialize empty DataFrames to store all results
+
 all_dose_data = pd.DataFrame()
 all_angle_data = pd.DataFrame()
 
@@ -80,5 +85,32 @@ for file in file_list:
 
     dat_dose
 
-dat_dose.head()
-dat_angle.head()
+#dat_dose.head()
+#dat_angle.head()
+
+data_cbind = pd.DataFrame()
+data_cbind = pd.concat([dat_dose, dat_angle[0,]], axis=1)
+
+print("c bind data")
+#data_cbind.head()
+print(data_cbind.head())
+
+unique_filenames = data_cbind['Filename'].unique()
+print(unique_filenames)
+
+
+plt.figure(figsize=(10, 6))
+plt.scatter(data_cbind['Dose'], data_cbind['Angles'], alpha=0.7)
+plt.title('Scatter Plot of Combined Data')
+plt.xlabel('X (Angles) Column')
+plt.ylabel('Y (Dose) Column')
+plt.grid(True, linestyle='--', alpha=0.7)
+#plt.show()
+
+g = sns.FacetGrid(data=data_cbind, col="Filename", col_wrap=3, height=4)
+g.map(sns.scatterplot, "Dose", "Angles")
+g.add_legend()
+g.set_axis_labels("Dose", "Angles")
+g.set_titles(col_template="Filename")
+plt.tight_layout()
+plt.show()
